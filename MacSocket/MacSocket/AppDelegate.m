@@ -52,6 +52,7 @@ static int client_handle;
 
 
 - (void)showLogstr:(NSString *) str {
+    NSLog(@"str=%@", str);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.logview setString:[self.logview.string?:@"" stringByAppendingString:str]];
     });
@@ -62,8 +63,13 @@ static int client_handle;
     [self.manager start:self.ip_address.stringValue];
 }
 
+static int serverNum = 0;
 - (IBAction)send:(id)sender{
-    NSLog(@"server run: ip %@", self.ip_address.stringValue);
+    if (client_handle == 0) {
+        [self showLogstr:@"没有客户端信号\n"];
+        return;
+    }
+    [self showLogstr:[NSString stringWithFormat:@"server msg:%@%d\n", self.sendValue.stringValue, serverNum]];
     [self.manager send:client_handle msg:self.sendValue.stringValue];
 }
 

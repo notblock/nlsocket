@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26A162E524440168008E2B0E /* ServerData.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A162E424440168008E2B0E /* ServerData.m */; };
 		7C2430FE2443482200635CC0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C2430FD2443482200635CC0 /* AppDelegate.m */; };
 		7C2431002443482300635CC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C2430FF2443482300635CC0 /* Assets.xcassets */; };
 		7C2431032443482300635CC0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C2431012443482300635CC0 /* MainMenu.xib */; };
@@ -15,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		26A162E324440168008E2B0E /* ServerData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerData.h; sourceTree = "<group>"; };
+		26A162E424440168008E2B0E /* ServerData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerData.m; sourceTree = "<group>"; };
 		7C2430F92443482200635CC0 /* MacSocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacSocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C2430FC2443482200635CC0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7C2430FD2443482200635CC0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -66,6 +69,8 @@
 				7C2431072443482300635CC0 /* MacSocket.entitlements */,
 				7C24310D244349D200635CC0 /* ServerManager.h */,
 				7C24310E244349D200635CC0 /* ServerManager.mm */,
+				26A162E324440168008E2B0E /* ServerData.h */,
+				26A162E424440168008E2B0E /* ServerData.m */,
 			);
 			path = MacSocket;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26A162E524440168008E2B0E /* ServerData.m in Sources */,
 				7C24310F244349D200635CC0 /* ServerManager.mm in Sources */,
 				7C2431062443482300635CC0 /* main.m in Sources */,
 				7C2430FE2443482200635CC0 /* AppDelegate.m in Sources */,
@@ -274,7 +280,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MacSocket/MacSocket.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = MacSocket/Info.plist;
@@ -291,7 +296,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MacSocket/MacSocket.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = MacSocket/Info.plist;
