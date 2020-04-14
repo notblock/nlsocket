@@ -7,14 +7,16 @@
 //
 
 #import "ServerData.h"
+@implementation ClientItem
 
+@end
 @implementation ServerData
 {
     NSMutableDictionary *_userInfos;
     
     dispatch_queue_t serverdata_queue;
 }
-+ (id)shareInstance {
++ (ServerData *)shareInstance {
     static ServerData *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -34,13 +36,13 @@
     return self;
 }
 
-- (NSMutableDictionary *)userInfos {
-    return _userInfos;
+- (NSDictionary *)userInfoDic {
+    return [_userInfos copy];
 }
 
-- (void)setUserInfo:(NSMutableDictionary *)userInfo {
+- (void)setUserInfo:(NSDictionary *)userInfo {
     dispatch_async(serverdata_queue, ^{
-        [self.userInfos setObject:userInfo forKey:userInfo[@"oud"]];
+        [self->_userInfos addEntriesFromDictionary:userInfo];
     });
 }
 

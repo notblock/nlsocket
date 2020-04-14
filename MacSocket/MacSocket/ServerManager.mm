@@ -82,41 +82,94 @@
             LOG(@"等待接受客户端");
             
             int client_socket = accept(server_socket, (struct sockaddr *)&client_address, &address_len);
-            LOG(@"接受客户端%d", client_socket);
+            
+            ClientItem *item = nil;
+            NSString *client_address_str = [NSString stringWithFormat:@"%s", inet_ntoa(client_address.sin_addr)];
+            if ([ServerData shareInstance].userInfoDic[client_address_str]) {
+                item = [ServerData shareInstance].userInfoDic[client_address_str];
+                if (item.handle != client_socket) {
+                    item = [[ClientItem alloc] init];
+                    item.ip_address = client_address_str;
+                    item.handle = client_socket;
+                    [[ServerData shareInstance] setUserInfo:@{item.ip_address:item}];
+                }
+            } else {
+                item = [[ClientItem alloc] init];
+                item.ip_address = client_address_str;
+                item.handle = client_socket;
+                [[ServerData shareInstance] setUserInfo:@{item.ip_address:item}];
+            }
+            
+            
+            LOG(@"接受客户端%d \t 客户端地址:%s", client_socket, inet_ntoa(client_address.sin_addr));
             //返回的client_socket为一个全相关的socket，其中包含client的地址和端口信息，通过client_socket可以和客户端进行通信。
             if (client_socket == -1) {
                 LOG(@"socket创建失败");
             }
-            dispatch_async(self->clientqueue, ^{            
-                [self recv:client_socket];
+            dispatch_async(self->clientqueue, ^{
+                [self notificationAll:nil];
             });
             
+            [self recv:client_socket];
         } while (1);
     });
     
     return 0;
 }
 
+- (void)notificationAll:(NSDictionary *)userInfos {
+    NSMutableArray *sendArr = [[NSMutableArray alloc] initWithCapacity:[[ServerData shareInstance].userInfoDic count]];
+    for (ClientItem *item in [[ServerData shareInstance].userInfoDic allValues]) {
+        [sendArr addObject:item.ip_address];
+    }
+    
+    for (ClientItem *item in [[ServerData shareInstance].userInfoDic allValues]) {
+        [self forword:item.handle msg:sendArr];
+    }
+    
+}
+
 - (void)recv:(int)client_socket {
     //告诉客户端，已连接
-    send(client_socket,[@"\0" UTF8String], 1, 0);
+//    send(client_socket,[@"\0" UTF8String], 1, 0);
     
     long byte_num = 0;
     char recv_msg[1024];
     do {
         bzero(recv_msg, 1024);
         byte_num = recv(client_socket,recv_msg,1024,0);
-//        recv_msg[byte_num] = '\0';
-        NSString *msg = [NSString stringWithUTF8String:recv_msg];
-        self.clientBlock(client_socket, [NSString stringWithFormat:@"client:%d,msg:%@", client_socket, msg]);
+        NSData *data = [NSData dataWithBytes:recv_msg length:strlen(recv_msg)];
+        NSError *error = nil;
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            LOG(@"接收数据解析错误:%@", error);
+        }
+        [self forward:client_socket fromData:json];
+        
     } while (byte_num > 0);
     self.clientBlock(client_socket, [NSString stringWithFormat:@"client:%d,退出", client_socket]);
     close(client_socket);
 }
 
+- (void)forword:(int)client_socket msg:(id)sendArr {
+    NSData *sendJson = [NSJSONSerialization dataWithJSONObject:sendArr options:0 error:0];
+    send(client_socket, sendJson.bytes, sendJson.length, 0);
+}
+
 -(void)send:(int)client_socket msg:(NSString *)msg {
     send(client_socket, msg.UTF8String, strlen(msg.UTF8String), 0);
 }
+
+
+- (void)forward:(int)handle fromData:(NSDictionary *)json {
+    ClientItem *item = [ServerData shareInstance].userInfoDic[json[@"f"]];
+    if (item) {
+        [self send:item.handle msg:json[@"m"]];
+    } else {
+        [self forword:handle msg:@{@"m":@"该设备没有上线"}];
+    }
+}
+
 
 
 @end

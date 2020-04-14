@@ -10,13 +10,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface ClientItem : NSObject
+
+@property (nonatomic, strong) NSString *ip_address;
+@property (nonatomic, assign) int handle;
+
+@end
+
+
+
+
+
 @interface ServerData : NSObject
 
-+ (id)shareInstance;
++ (ServerData *)shareInstance;
 
-- (NSMutableDictionary *)userInfos;
+- (NSDictionary *)userInfoDic;
 
-- (void)setUserInfo:(NSMutableDictionary *)userInfo;
+- (void)setUserInfo:(NSDictionary *)userInfo;
 @end
 
 NS_ASSUME_NONNULL_END
