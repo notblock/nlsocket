@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		26A162E524440168008E2B0E /* ServerData.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A162E424440168008E2B0E /* ServerData.m */; };
-		7C2430FE2443482200635CC0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C2430FD2443482200635CC0 /* AppDelegate.m */; };
+		7C2430FE2443482200635CC0 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7C2430FD2443482200635CC0 /* AppDelegate.mm */; };
 		7C2431002443482300635CC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C2430FF2443482300635CC0 /* Assets.xcassets */; };
 		7C2431032443482300635CC0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C2431012443482300635CC0 /* MainMenu.xib */; };
 		7C2431062443482300635CC0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C2431052443482300635CC0 /* main.m */; };
-		7C24310F244349D200635CC0 /* ServerManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7C24310E244349D200635CC0 /* ServerManager.mm */; };
+		7C8DC8B224541F6300D70A19 /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 7C8DC8B124541F6300D70A19 /* readme.md */; };
+		7CD0083724697A12006EC8CD /* NLSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0083624697A12006EC8CD /* NLSocket.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,7 +21,7 @@
 		26A162E424440168008E2B0E /* ServerData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerData.m; sourceTree = "<group>"; };
 		7C2430F92443482200635CC0 /* MacSocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacSocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C2430FC2443482200635CC0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		7C2430FD2443482200635CC0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		7C2430FD2443482200635CC0 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		7C2430FF2443482300635CC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C2431022443482300635CC0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		7C2431042443482300635CC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -28,6 +29,9 @@
 		7C2431072443482300635CC0 /* MacSocket.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacSocket.entitlements; sourceTree = "<group>"; };
 		7C24310D244349D200635CC0 /* ServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerManager.h; sourceTree = "<group>"; };
 		7C24310E244349D200635CC0 /* ServerManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ServerManager.mm; sourceTree = "<group>"; };
+		7C8DC8B124541F6300D70A19 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		7CD0083524697A12006EC8CD /* NLSocket.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NLSocket.hpp; sourceTree = "<group>"; };
+		7CD0083624697A12006EC8CD /* NLSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NLSocket.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +64,9 @@
 		7C2430FB2443482200635CC0 /* MacSocket */ = {
 			isa = PBXGroup;
 			children = (
+				7CD0083424697A12006EC8CD /* nlsdk */,
 				7C2430FC2443482200635CC0 /* AppDelegate.h */,
-				7C2430FD2443482200635CC0 /* AppDelegate.m */,
+				7C2430FD2443482200635CC0 /* AppDelegate.mm */,
 				7C2430FF2443482300635CC0 /* Assets.xcassets */,
 				7C2431012443482300635CC0 /* MainMenu.xib */,
 				7C2431042443482300635CC0 /* Info.plist */,
@@ -71,8 +76,19 @@
 				7C24310E244349D200635CC0 /* ServerManager.mm */,
 				26A162E324440168008E2B0E /* ServerData.h */,
 				26A162E424440168008E2B0E /* ServerData.m */,
+				7C8DC8B124541F6300D70A19 /* readme.md */,
 			);
 			path = MacSocket;
+			sourceTree = "<group>";
+		};
+		7CD0083424697A12006EC8CD /* nlsdk */ = {
+			isa = PBXGroup;
+			children = (
+				7CD0083524697A12006EC8CD /* NLSocket.hpp */,
+				7CD0083624697A12006EC8CD /* NLSocket.cpp */,
+			);
+			name = nlsdk;
+			path = ../../nlsdk;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -133,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C2431002443482300635CC0 /* Assets.xcassets in Resources */,
+				7C8DC8B224541F6300D70A19 /* readme.md in Resources */,
 				7C2431032443482300635CC0 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,10 +161,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CD0083724697A12006EC8CD /* NLSocket.cpp in Sources */,
 				26A162E524440168008E2B0E /* ServerData.m in Sources */,
-				7C24310F244349D200635CC0 /* ServerManager.mm in Sources */,
 				7C2431062443482300635CC0 /* main.m in Sources */,
-				7C2430FE2443482200635CC0 /* AppDelegate.m in Sources */,
+				7C2430FE2443482200635CC0 /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
