@@ -778,7 +778,7 @@
                     <constraint firstItem="vRX-Yj-KNO" firstAttribute="leading" secondItem="Gx2-xe-Sng" secondAttribute="trailing" constant="8" id="sQR-LO-5Ax"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-153" y="-317"/>
+            <point key="canvasLocation" x="-618" y="-532"/>
         </window>
     </objects>
 </document>
