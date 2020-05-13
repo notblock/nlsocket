@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-
+#import "ClientWindowController.h"
 
 
 
@@ -21,7 +21,7 @@
 
 @property (unsafe_unretained) IBOutlet NSTextView *logview;
 
-@property (weak) IBOutlet NSTextField *ip_address;
+
 @property (weak) IBOutlet NSTextField *sendValue;
 
 
@@ -56,6 +56,14 @@
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
+}
+- (IBAction)openNewClient:(id)sender {
+    ClientWindowController *client = [[ClientWindowController alloc] initWithWindowNibName:@"ClientWindowController"];
+    
+    [client.window makeMainWindow];
+    [client.window orderFront:nil];
+    [client.window center];
+    
 }
 
 

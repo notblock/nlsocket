@@ -14,7 +14,6 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
-                <outlet property="ip_address" destination="Gx2-xe-Sng" id="g4N-iO-i27"/>
                 <outlet property="logview" destination="Rhs-W2-1gv" id="cwc-Yt-hoS"/>
                 <outlet property="sendValue" destination="JCM-Fm-x3k" id="jqQ-CB-YXZ"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
@@ -686,7 +685,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="598" height="456"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2558" height="1273"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="598" height="456"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -704,14 +703,6 @@
                             <action selector="start:" target="Voe-Tx-rLC" id="TcZ-Yk-9R1"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gx2-xe-Sng">
-                        <rect key="frame" x="11" y="5" width="510" height="22"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="192.168.1.114" placeholderString="ip address" drawsBackground="YES" id="LTo-qL-tfS">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDH-Kh-zPc">
                         <rect key="frame" x="0.0" y="67" width="598" height="404"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="kzU-SC-MOh">
@@ -749,7 +740,6 @@
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GLk-go-MTH">
                         <rect key="frame" x="521" y="30" width="70" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="58" id="KFf-ds-CXO"/>
                             <constraint firstAttribute="height" constant="21" id="NBR-cZ-M59"/>
                         </constraints>
                         <buttonCell key="cell" type="push" title="send" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nPc-3Z-BjT">
@@ -760,22 +750,32 @@
                             <action selector="send:" target="Voe-Tx-rLC" id="YA5-Sj-wd1"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kyx-bM-ULF">
+                        <rect key="frame" x="412" y="-1" width="107" height="32"/>
+                        <buttonCell key="cell" type="push" title="open client" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="L9f-FS-Btc">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="openNewClient:" target="Voe-Tx-rLC" id="rzO-Ib-99n"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="Gx2-xe-Sng" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="11" id="1pV-Uk-kB3"/>
                     <constraint firstItem="lDH-Kh-zPc" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="1qj-PZ-twa"/>
                     <constraint firstItem="vRX-Yj-KNO" firstAttribute="top" secondItem="lDH-Kh-zPc" secondAttribute="bottom" constant="40" id="91U-q1-DAd"/>
+                    <constraint firstItem="vRX-Yj-KNO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="E88-iz-9ge"/>
                     <constraint firstAttribute="trailing" secondItem="GLk-go-MTH" secondAttribute="trailing" constant="13" id="F4q-W4-um2"/>
+                    <constraint firstItem="kyx-bM-ULF" firstAttribute="top" secondItem="JCM-Fm-x3k" secondAttribute="bottom" constant="10" id="H9W-O1-cxB"/>
                     <constraint firstItem="vRX-Yj-KNO" firstAttribute="top" secondItem="GLk-go-MTH" secondAttribute="bottom" constant="10" id="Izf-FF-xgr"/>
                     <constraint firstItem="JCM-Fm-x3k" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="11" id="OxT-VE-U7I"/>
+                    <constraint firstItem="JCM-Fm-x3k" firstAttribute="top" secondItem="lDH-Kh-zPc" secondAttribute="bottom" constant="8" id="Pl7-GG-heI"/>
                     <constraint firstItem="lDH-Kh-zPc" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="-15" id="R8G-9F-87K"/>
                     <constraint firstAttribute="trailing" secondItem="lDH-Kh-zPc" secondAttribute="trailing" id="T65-hT-mWO"/>
                     <constraint firstAttribute="trailing" secondItem="vRX-Yj-KNO" secondAttribute="trailing" constant="8" id="dBB-Uj-SGQ"/>
                     <constraint firstItem="GLk-go-MTH" firstAttribute="leading" secondItem="JCM-Fm-x3k" secondAttribute="trailing" constant="14" id="fg6-CB-9OV"/>
                     <constraint firstAttribute="bottom" secondItem="vRX-Yj-KNO" secondAttribute="bottom" constant="6" id="kWV-uZ-lTg"/>
-                    <constraint firstItem="Gx2-xe-Sng" firstAttribute="top" secondItem="JCM-Fm-x3k" secondAttribute="bottom" constant="10" id="n3P-uk-Tw9"/>
-                    <constraint firstAttribute="bottom" secondItem="Gx2-xe-Sng" secondAttribute="bottom" constant="5" id="nmc-6W-ps0"/>
-                    <constraint firstItem="vRX-Yj-KNO" firstAttribute="leading" secondItem="Gx2-xe-Sng" secondAttribute="trailing" constant="8" id="sQR-LO-5Ax"/>
+                    <constraint firstItem="vRX-Yj-KNO" firstAttribute="leading" secondItem="kyx-bM-ULF" secondAttribute="trailing" constant="16" id="r1y-Jt-XiT"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="-618" y="-532"/>

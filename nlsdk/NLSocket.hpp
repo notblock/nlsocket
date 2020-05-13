@@ -24,7 +24,7 @@ namespace nlsdk {
     
     /**
      消息结构体
-     */
+     *   *   */
     struct msg_struct {
         char id[36];//消息uuid
         char *msg;//消息体
