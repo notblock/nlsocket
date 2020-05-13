@@ -21,26 +21,30 @@
 //#include <vertor>
 #include <map>
 
-
-#define infolog(fram, ...) printf(fram, ##__VA_ARGS__)
+//printf(fram, ##__VA_ARGS__)
+#define infolog(fram, ...)
 #define infobug(fram, ...)
+#define infomem(fram, ...)
 #define LOG_FREE_VAR 1
 
 
 static inline void *malloc_nl(size_t size, const char *info, size_t line)
 {
     void *temp_mem = malloc(size);
-    printf("【%lu】创建一个%s:%lu:%p\n", line, info, size, temp_mem);
+    if (temp_mem == NULL) {
+        infomem("mem error");
+        exit(0);
+    }
+    infomem("【%lu】创建一个%s:%lu:%p\n", line, info, size, temp_mem);
     return temp_mem;
 }
 
 static inline void free_nl(void *p, const char *info, size_t line)
 {
-    printf("【%lu】释放内存%s:%lu:%p\n", line, info, strlen(info), p);
+    infomem("【%lu】释放内存%s:%lu:%p\n", line, info, strlen(info), p);
     free(p);
-#if LOG_FREE_VAR
-    printf("[%lu]释放", line);
-#endif
+    infomem("[%lu]释放\n", line);
+
 }
 
 
@@ -195,7 +199,7 @@ namespace nlsdk {
         server_addr.sin_port = htons(12306);
         server_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
         bzero(&(server_addr.sin_zero),8);
-        
+        ((void(*)(char *))(self->post_msg))("init server");
         //创建socket
         int server_socket = socket(AF_INET, SOCK_STREAM, 0);//SOCK_STREAM 有连接
         if (server_socket == -1) {
@@ -221,28 +225,36 @@ namespace nlsdk {
             return 1;
         }
         infolog("server listenning\n");
-        dispatch_async(socket_listen_queue, ^{
-            do {
-                infolog("wait client\n");
-                struct sockaddr_in client_address;
-                socklen_t address_len = sizeof(struct sockaddr_in);
-                int client_socket = accept(server_socket, (struct sockaddr *)&client_address, &address_len);
-                connecter.insert(std::map<int, char*>::value_type(client_socket, inet_ntoa(client_address.sin_addr)));
+        ((void(*)(char *))(self->post_msg))("server listenning");
+        do {
+            infolog("wait client\n");
+            struct sockaddr_in client_address;
+            socklen_t address_len = sizeof(struct sockaddr_in);
+            ((void(*)(char *))(self->post_msg))("wait client");
+            int client_socket = accept(server_socket, (struct sockaddr *)&client_address, &address_len);
+            if (client_socket == -1) {
+                //                    connecter.erase(client_socket);
+                printf("client_socket == -1\n");
+                continue;
+            }
+            dispatch_async(socket_listen_queue, ^{
+                //                connecter.insert(std::map<int, char*>::value_type(client_socket, inet_ntoa(client_address.sin_addr)));
                 infolog("client:%s \t client_handle:%d\n", inet_ntoa(client_address.sin_addr), client_socket);
+                char printchar[100];
+                sprintf(printchar, "client:%s \t client_handle:%d\n", inet_ntoa(client_address.sin_addr), client_socket);
+                ((void(*)(char *))(self->post_msg))(printchar);
                 //返回的client_socket为一个全相关的socket，其中包含client的地址和端口信息，通过client_socket可以和客户端进行通信。
-                if (client_socket == -1) {
-                    connecter.erase(client_socket);
-                    continue;
-                }
+                
                 dispatch_async(socket_server_rev_queue, ^{
                     infolog("client connect success, open a queue\n");
+                    ((void(*)(char *))(self->post_msg))("client connect success, open a queue");
                     char recv_msg[1024];
                     //connect 成功之后，其实系统将你创建的socket绑定到一个系统分配的端口上，且其为全相关，包含服务器端的信息，可以用来和服务器端进行通信。
                     char *temp_rev = NULL;
                     while (1) {
                         bzero(recv_msg, 1024);
                         ssize_t byte_num = recv(client_socket,recv_msg,1024,0);
-                        
+                        //                        printf("rcv_msg length:%lu", strlen(recv_msg));
                         if (temp_rev != NULL) {
                             char *temp = (char *)malloc_nl((strlen(temp_rev) + strlen(recv_msg))* sizeof(char), "temp", __LINE__);
                             strcat(temp, temp_rev);
@@ -256,20 +268,22 @@ namespace nlsdk {
                         }
                         
                         if (byte_num <= 0) {
-                            infolog("byte_num:%d\n", byte_num);
                             break;
                         }
                     }
                     free_nl(temp_rev, "temp_rev", __LINE__);
                     close(client_socket);
-                    connecter.erase(client_socket);
+                    //                    connecter.erase(client_socket);
                     infolog("关闭客户机链接 %d", client_socket);
+                    char printchar[100];
+                    sprintf(printchar, "close: client:%s \t client_handle:%d\n", inet_ntoa(client_address.sin_addr), client_socket);
+                    ((void(*)(char *))(self->post_msg))(printchar);
                 });
                 
-                
-            } while (1);
+            });
             
-        });
+        } while (1);
+        
         
         return 0;
     }
@@ -383,14 +397,14 @@ namespace nlsdk {
     rev_msg(char *msg, int handle)
     {
         struct msg_struct msg_stru = socket_unpack_msg(msg);
-        ((void(*)(char *))(this->post_msg))(msg_stru.msg?:NULL);//1st function call argument is an uninitialized value
+//        ((void(*)(char *))(this->post_msg))(msg_stru.msg?:NULL);//1st function call argument is an uninitialized value
         free_nl(msg_stru.msg, "msg_stru.msg", __LINE__);
-        memset(&msg_stru, 0, 0);
-        strcpy(msg_stru.from, "s");
-        strcpy(msg_stru.to, "b");
-        msg_stru.msg = (char *)malloc_nl(2* sizeof(char), "msg_stru.msg", __LINE__);
-        strcpy(msg_stru.msg, "o");
-        this->send_msg(msg_stru, handle);
+//        memset(&msg_stru, 0, 0);
+//        strcpy(msg_stru.from, "s");
+//        strcpy(msg_stru.to, "b");
+//        msg_stru.msg = (char *)malloc_nl(2* sizeof(char), "msg_stru.msg", __LINE__);
+//        strcpy(msg_stru.msg, "o");
+//        this->send_msg(msg_stru, handle);
         //        free(msg_stru->from[80]);
         //        free(msg_stru->to);
         //        free(msg_stru->id);
@@ -475,7 +489,7 @@ namespace nlsdk {
     rev_msg(char *msg, int handle)
     {
         struct msg_struct msg_stru = socket_unpack_msg(msg);
-//        ((void(*)(char *))(this->post_msg))(msg_stru.msg?:NULL);
+        ((void(*)(char *))(this->post_msg))(msg_stru.msg?:NULL);
         free_nl(msg_stru.msg, "msg_stru.msg", __LINE__);
         return 0;
     }

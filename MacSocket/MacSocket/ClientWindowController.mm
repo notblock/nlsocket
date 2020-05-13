@@ -15,6 +15,12 @@ static nlsdk::socket_client *instance;
 
 void post_msg(char *msg)
 {
+    if (msg == NULL)
+    {
+        [chandle msg_post:@"unknow"];
+        return;
+    }
+    
     char *temp = (char *)malloc(strlen(msg) * sizeof(char));
     strcpy(temp, msg);
     NSString *msgstr = [NSString stringWithUTF8String:temp];

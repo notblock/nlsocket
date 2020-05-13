@@ -60,7 +60,7 @@ namespace nlsdk {
         int rev_msg(char *msg, int handle);
         
         void set_post_msg_handle(void *post_msg);
-        
+        void *post_msg;
         ~socket_server();
     private:
         
@@ -72,7 +72,7 @@ namespace nlsdk {
         
         const char *ip_addr;
         
-        void *post_msg;
+        
         
     };
     

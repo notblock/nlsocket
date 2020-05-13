@@ -34,14 +34,26 @@
     set_appdelegate_bridge(self);
     __weak typeof(self) wk = self;
     self.postMsg = ^(char *msg) {
-        char *temp = (char *)malloc(strlen(msg) * sizeof(char));
-        strcpy(temp, msg);
-        NSString *str = [[NSString alloc] initWithUTF8String:temp];
-        free(temp);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *temp = [NSString stringWithFormat:@"%@\nrev:%@", wk.logview.string, str];
-            [wk.logview setString:temp];
-        });
+        if (msg == NULL)
+        {
+//            NSLog(@"msg = NULL");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *temp = [NSString stringWithFormat:@"%@\nunknow", wk.logview.string];
+                NSLog(@"%@", temp);
+//                [wk.logview setString:temp];
+            });
+            return;
+        }
+        
+//        char *temp = (char *)malloc(strlen(msg) * sizeof(char));
+//        strcpy(temp, msg);
+        NSString *str = [[NSString alloc] initWithUTF8String:msg];
+//        free(temp);
+        NSLog(@"%@", str);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSString *temp = [NSString stringWithFormat:@"%@\n:%@", wk.logview.string, str];
+//            [wk.logview setString:temp];
+//        });
     };
     
 }
