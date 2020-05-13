@@ -34,7 +34,10 @@
     set_appdelegate_bridge(self);
     __weak typeof(self) wk = self;
     self.postMsg = ^(char *msg) {
-        NSString *str = [[NSString alloc] initWithUTF8String:msg];
+        char *temp = (char *)malloc(strlen(msg) * sizeof(char));
+        strcpy(temp, msg);
+        NSString *str = [[NSString alloc] initWithUTF8String:temp];
+        free(temp);
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *temp = [NSString stringWithFormat:@"%@\nrev:%@", wk.logview.string, str];
             [wk.logview setString:temp];

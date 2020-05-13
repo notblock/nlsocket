@@ -24,7 +24,7 @@
 
 #define infolog(fram, ...) printf(fram, ##__VA_ARGS__)
 #define infobug(fram, ...)
-
+#define LOG_FREE_VAR 1
 
 
 static inline void *malloc_nl(size_t size, const char *info, size_t line)
@@ -38,6 +38,9 @@ static inline void free_nl(void *p, const char *info, size_t line)
 {
     printf("【%lu】释放内存%s:%lu:%p\n", line, info, strlen(info), p);
     free(p);
+#if LOG_FREE_VAR
+    printf("[%lu]释放", line);
+#endif
 }
 
 
@@ -77,7 +80,7 @@ namespace nlsdk {
                 //            temp_a = (temp_a + 5);
                 char *temp_b = strstr(temp_a, end_tag);
                 if (temp_b) {
-                    char *rev_temp = (char *)malloc_nl(temp_b-temp_a - 2, "rev_temp", __LINE__);
+                    char *rev_temp = (char *)malloc_nl((temp_b-temp_a - 2) * sizeof(char), "rev_temp", __LINE__);
                     strlcpy(rev_temp, temp_a + 3, temp_b-temp_a - 2);
                     
                     self->rev_msg(rev_temp, handle);
@@ -90,7 +93,7 @@ namespace nlsdk {
                 break;
             }
         } while (1);
-        free_nl(rev, "rev", __LINE__);
+//        free_nl(rev, "rev", __LINE__);
         return temp_a;
     }
     
@@ -126,13 +129,13 @@ namespace nlsdk {
                     long byte_num = recv(server_socket,recv_msg,1024,0);
                     
                     if (temp_rev != NULL) {
-                        char *temp = (char *)malloc_nl(strlen(temp_rev) + strlen(recv_msg), "temp", __LINE__);
+                        char *temp = (char *)malloc_nl((strlen(temp_rev) + strlen(recv_msg))* sizeof(char), "temp", __LINE__);
                         strcat(temp, temp_rev);
                         strcat(temp, recv_msg);
                         free_nl(temp_rev, "temp_rev", __LINE__);
                         temp_rev = rev_pack(temp, self, server_socket);
                     } else {
-                        char *temp = (char *)malloc_nl(strlen(recv_msg), "temp", __LINE__);
+                        char *temp = (char *)malloc_nl(strlen(recv_msg) * sizeof(char), "temp", __LINE__);
                         strcpy(temp, recv_msg);
                         temp_rev = rev_pack(temp, self, server_socket);
                     }
@@ -232,7 +235,7 @@ namespace nlsdk {
                     continue;
                 }
                 dispatch_async(socket_server_rev_queue, ^{
-                    infolog("client connect success, open a queue");
+                    infolog("client connect success, open a queue\n");
                     char recv_msg[1024];
                     //connect 成功之后，其实系统将你创建的socket绑定到一个系统分配的端口上，且其为全相关，包含服务器端的信息，可以用来和服务器端进行通信。
                     char *temp_rev = NULL;
@@ -241,13 +244,13 @@ namespace nlsdk {
                         ssize_t byte_num = recv(client_socket,recv_msg,1024,0);
                         
                         if (temp_rev != NULL) {
-                            char *temp = (char *)malloc_nl(strlen(temp_rev) + strlen(recv_msg), "temp", __LINE__);
+                            char *temp = (char *)malloc_nl((strlen(temp_rev) + strlen(recv_msg))* sizeof(char), "temp", __LINE__);
                             strcat(temp, temp_rev);
                             strcat(temp, recv_msg);
                             free_nl(temp_rev, "temp_rev", __LINE__);
                             temp_rev = rev_pack(temp, self, client_socket);
                         } else {
-                            char *temp = (char *)malloc_nl(strlen(recv_msg), "temp", __LINE__);
+                            char *temp = (char *)malloc_nl(strlen(recv_msg)* sizeof(char), "temp", __LINE__);
                             strcpy(temp, recv_msg);
                             temp_rev = rev_pack(temp, self, client_socket);
                         }
@@ -272,7 +275,7 @@ namespace nlsdk {
     }
     
     char * socket_format_struct_msg(struct msg_struct msg) {
-        char *m = (char*)malloc_nl(strlen(msg.msg) + 6 + 36 + 10 + 80 + 80 + 1 + 1, "m", __LINE__);
+        char *m = (char*)malloc_nl((strlen(msg.msg) + 6 + 36 + 10 + 80 + 80 + 1 + 1)* sizeof(char), "m", __LINE__);
         sprintf(m, "%sl:%ld\ni:%s\nf:%s\no:%s\nz:%s\nd:%s\np:%d\n%s",begin_tag, msg.size, msg.id, msg.from, msg.to, msg.zip, msg.msg, msg.type, end_tag);
         return m;
     }
@@ -307,7 +310,7 @@ namespace nlsdk {
                     free_nl(msg_stru.msg, "msg_stru.msg", __LINE__);
                 }
 //                msg_stru.msg = (char *)malloc(strlen(temp_struct_name) + 1);
-                char *msg_data = (char *)malloc_nl(strlen(temp_struct_name) + 1, "msg_data", __LINE__);
+                char *msg_data = (char *)malloc_nl((strlen(temp_struct_name) + 1)* sizeof(char), "msg_data", __LINE__);
                 strcpy(msg_data, temp_struct_name);
                 msg_stru.msg = msg_data;
             }
@@ -385,7 +388,7 @@ namespace nlsdk {
         memset(&msg_stru, 0, 0);
         strcpy(msg_stru.from, "s");
         strcpy(msg_stru.to, "b");
-        msg_stru.msg = (char *)malloc_nl(2, "msg_stru.msg", __LINE__);
+        msg_stru.msg = (char *)malloc_nl(2* sizeof(char), "msg_stru.msg", __LINE__);
         strcpy(msg_stru.msg, "o");
         this->send_msg(msg_stru, handle);
         //        free(msg_stru->from[80]);
@@ -499,7 +502,7 @@ namespace nlsdk {
     send_msg(const char *msg)
     {
         struct msg_struct m;
-        m.msg = (char *)malloc_nl(strlen(msg), "m.msg", __LINE__);
+        m.msg = (char *)malloc_nl(strlen(msg) * sizeof(char), "m.msg", __LINE__);
         strcpy(m.msg, msg);
         char *mc = socket_format_struct_msg(m);
         infobug("send:%s\n", msg);
@@ -513,7 +516,7 @@ namespace nlsdk {
     socket_client::
     ip_address()
     {
-        char *temp = (char *)malloc_nl(sizeof(char), "temp", __LINE__);
+        char *temp = (char *)malloc_nl(sizeof(char)* sizeof(char), "temp", __LINE__);
         strcpy(temp, this->ip_addr);
         return temp;
     }

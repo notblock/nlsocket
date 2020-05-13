@@ -15,7 +15,10 @@ static nlsdk::socket_client *instance;
 
 void post_msg(char *msg)
 {
-    NSString *msgstr = [NSString stringWithUTF8String:msg];
+    char *temp = (char *)malloc(strlen(msg) * sizeof(char));
+    strcpy(temp, msg);
+    NSString *msgstr = [NSString stringWithUTF8String:temp];
+    free(temp);
     [chandle msg_post:msgstr];
 }
 
@@ -55,7 +58,7 @@ static inline void init_socket()
 
 - (void)msg_post:(NSString *)postMsg {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *allMsg = [_msgValue.string stringByAppendingFormat:@"\nrcv:%@", postMsg];
+        NSString *allMsg = [self.msgValue.string stringByAppendingFormat:@"\nrcv:%@", postMsg];
         [self.msgValue setString:allMsg];
     });
 }
